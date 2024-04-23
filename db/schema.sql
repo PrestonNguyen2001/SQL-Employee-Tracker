@@ -1,3 +1,5 @@
+-- DROP DATABASE IF EXISTS employee_tracker_db;
+-- CREATE DATABASE employee_tracker_db;
 -- Create tables
 CREATE TABLE department (
     id SERIAL PRIMARY KEY,
