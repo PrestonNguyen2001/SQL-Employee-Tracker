@@ -28,23 +28,18 @@ INSERT INTO role (title, salary, department_id) VALUES
 
 -- Insert employees
 INSERT INTO employee (first_name, last_name, role_id, manager_id, is_manager) VALUES
-('John', 'Doe', 1, NULL, FALSE), -- No manager, not a manager
-('Jane', 'Smith', 2, NULL, TRUE), -- No manager, is a manager
-('Michael', 'Brown', 13, NULL, TRUE), -- No manager, is a manager
-('Emily', 'Johnson', 4, 3, FALSE), -- No manager, not a manager
-('David', 'Williams', 5, NULL, TRUE), -- No manager, is a manager
 ('Jessica', 'Martinez', 6, NULL, FALSE), -- No manager, not a manager
 ('Christopher', 'Jones', 7, NULL, TRUE), -- No manager, is a manager
 ('Ashley', 'Brown', 8, NULL, FALSE), -- No manager, not a manager
 ('Matthew', 'Garcia', 9, NULL, FALSE), -- No manager, not a manager
-('Amanda', 'Davis', 10, 2, FALSE), -- Linked to Sales Manager, not a manager
-('Daniel', 'Rodriguez', 11, 7, FALSE), -- Linked to Operations Manager, not a manager
-('Olivia', 'Wilson', 10, 15, FALSE), -- Linked to HR Manager, not a manager
-('William', 'Moore', 4, NULL, FALSE), -- Linked to Financial Analyst, not a manager
-('Emma', 'Thomas', 12, NULL, TRUE), -- Linked to Engineering Manager, not a manager
-('James', 'Anderson', 13, NULL, TRUE), -- Linked to Sales Director, is a manager
-('Sophie', 'Brown', 11, NULL, TRUE), -- Linked to Marketing Director, is a manager
-('Mia', 'Taylor', 10, 2, FALSE), -- Linked to Sales Manager, not a manager
-('Logan', 'Clark', 11, 7, FALSE), -- Linked to Operations Manager, not a manager
-('Chloe', 'Hernandez', 10, 5, FALSE), -- Linked to HR Manager, not a manager
-('Liam', 'Gonzalez', 4, 5, FALSE); -- Linked to Financial Analyst, not a manager
+('Amanda', 'Davis', 10, NULL, FALSE), -- Previously managed by Jane, now no manager
+('Daniel', 'Rodriguez', 11, 7, FALSE), -- Managed by Operations Manager
+('Olivia', 'Wilson', 10, 5, FALSE), -- Managed by HR Manager
+('William', 'Moore', 4, NULL, FALSE), -- Previously managed by Emily, now no manager
+('Emma', 'Thomas', 12, NULL, TRUE), -- No manager, is a manager
+('James', 'Anderson', 13, NULL, TRUE), -- No manager, is a manager
+('Sophie', 'Brown', 11, NULL, TRUE), -- No manager, is a manager
+('Mia', 'Taylor', 10, NULL, FALSE), -- Previously managed by Jane, now no manager
+('Logan', 'Clark', 11, 7, FALSE), -- Managed by Operations Manager
+('Chloe', 'Hernandez', 10, 5, FALSE), -- Managed by HR Manager
+('Liam', 'Gonzalez', 4, 5, FALSE); -- Managed by HR Manager
