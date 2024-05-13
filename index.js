@@ -1,33 +1,11 @@
 const chalk = require("chalk");
 const inquirer = require("inquirer");
-const {
-  handleViewAllDepartments,
-  handleViewAllRoles,
-  handleViewAllEmployees,
-  handleViewAllManagers,
-  handleViewTotalBudgetByAllDepartments,
-  handleViewTotalUtilizedBudgetByDepartment,
-  handleViewEmployeesByDepartment,
-  handleViewEmployeesByManager,
-  handleViewRolesByDepartment,
-} = require("./lib/handlers/view");
-const {
-  handleUpdateRole,
-  handleUpdateEmployeeRole,
-  handleUpdateEmployeeManager,
-  handleUpdateDepartmentName,
-} = require("./lib/handlers/update");
-const { 
-  handleAddDepartment,
-  handleAddRole, 
-  handleAddEmployee,
-  } = require("./lib/handlers/add");
+const Handler = require("./lib/handlers/handler");
+const queries = require("./lib/queries/queries");
+const handler = new Handler(queries);
+const runChalkDemos = require("./chalk");
+const Table = require("cli-table3");
 
-const {
-  handleDeleteDepartment,
-  handleDeleteRole,
-  handleDeleteEmployee,
-} = require("./lib/handlers/delete");
 // Function to generate ASCII art
 const generateAsciiArt = () => {
   const asciiArt = `
@@ -54,13 +32,17 @@ const generateAsciiArt = () => {
 // Function to start the application
 const startApp = () => {
   console.log("\n"); // Add a newline for spacing at the beginning
+  
+
+ 
 
   // Initial choices containing main options
   const initialChoices = [
     "",
-    "➣ Department Options",
-    "➣ Role Options",
-    "➣ Employee Options\n",
+    chalk.hex("#1E90FF").italic.bold("📁 ➣ Department Options"),
+    chalk.hex("#32CD32").italic.bold("👤 ➣ Role Options"),
+    chalk.hex("#FFD700").italic.bold("🧑‍💼 ➣ Employee Options\n"),
+    // "➣ Run Chalk Demos",
     chalk.red("*** Exit ***\n"),
   ];
 
@@ -74,23 +56,34 @@ const startApp = () => {
           message:
             "What would you like to do?\n (Select an option below and press Enter)",
           choices: initialChoices,
+          pageSize: 20,
         },
       ])
       .then((answers) => {
-        // Check the user's selection and display corresponding additional options
-        switch (answers.mainOption) {
-          case "➣ Department Options":
+        // Use the exact strings including chalk styles for matching in the switch statement
+        const chosenOption = answers.mainOption.replace(/\u001b\[.*?m/g, ""); // Removes ANSI color codes for matching
+
+        switch (chosenOption) {
+          case "📁 ➣ Department Options":
             displayDepartmentOptions();
             break;
-          case "➣ Role Options":
+          case "👤 ➣ Role Options":
             displayRoleOptions();
             break;
-          case "➣ Employee Options\n":
+          case "🧑‍💼 ➣ Employee Options\n":
             displayEmployeeOptions();
             break;
-          case chalk.red("*** Exit ***\n"):
-            console.log("Goodbye!");
-            process.exit();
+          // case "➣ Run Chalk Demos":
+          //   runChalkDemos();
+          //   displayInitialChoices(); // Recall the function to prompt again
+          //   break;
+          case "*** Exit ***\n":
+            console.log("Exiting...");
+            process.exit(); // Exit the application
+            break;
+          default:
+            console.log("Invalid option selected.");
+            displayInitialChoices(); // Recall the function to prompt again
             break;
         }
       });
@@ -116,27 +109,27 @@ const startApp = () => {
 
     switch (answers.departmentOption) {
       case "➣ Add Department":
-        await handleAddDepartment();
+        await handler.addDepartment();
         displayDepartmentOptions();
         break;
       case "➣ Delete Department":
-        await handleDeleteDepartment();
+        await handler.deleteDepartment();
         displayDepartmentOptions();
         break;
       case "➣ Update Department Name":
-        await handleUpdateDepartmentName();
+        await handler.updateDepartmentName();
         displayDepartmentOptions();
         break;
       case "➣ View all Departments":
-        await handleViewAllDepartments();
+        await handler.viewAllDepartments();
         displayDepartmentOptions();
         break;
       case "➣ View Total Budget by All Departments":
-        await handleViewTotalBudgetByAllDepartments();
+        await handler.viewTotalBudgetByAllDepartments();
         displayDepartmentOptions();
         break;
       case "➣ View Total Utilized Budget by Department\n":
-        await handleViewTotalUtilizedBudgetByDepartment();
+        await handler.viewTotalUtilizedBudgetByDepartment();
         displayDepartmentOptions();
         break;
       case chalk.red("*** Back to Main Menu ***\n"):
@@ -164,23 +157,23 @@ const startApp = () => {
 
     switch (answers.roleOption) {
       case "➣ Add a role":
-        await handleAddRole();
+        await handler.addRole();
         displayRoleOptions();
         break;
       case "➣ Delete role":
-        await handleDeleteRole();
+        await handler.deleteRole();
         displayRoleOptions();
         break;
       case "➣ Update Role":
-        await handleUpdateRole();
+        await handler.updateRole();
         displayRoleOptions();
         break;
       case "➣ View all roles":
-        await handleViewAllRoles();
+        await handler.viewAllRoles();
         displayRoleOptions();
         break;
       case "➣ View Roles by Department\n":
-        await handleViewRolesByDepartment();
+        await handler.viewRolesByDepartment();
         displayRoleOptions();
         break;
       case chalk.red("*** Back to Main Menu ***\n"):
@@ -214,37 +207,48 @@ const startApp = () => {
 
     switch (answers.employeeOption) {
       case "➣ Add New Employee":
-        await handleAddEmployee();
+        await handler.addEmployee();
+        displayEmployeeOptions();
         break;
       case "➣ Delete Employee":
-        await handleDeleteEmployee();
+        await handler.deleteEmployee();
+        displayEmployeeOptions();
         break;
       case "➣ Update Employee Role":
-        await handleUpdateEmployeeRole();
+        await handler.updateEmployeeRole();
+        displayEmployeeOptions();
         break;
       case "➣ Update Employee Manager":
-        await handleUpdateEmployeeManager();
+        await handler.updateEmployeeManager();
+        displayEmployeeOptions();
         break;
       case "➣ View All Employees":
-        await handleViewAllEmployees();
+        await handler.viewAllEmployees();
+        displayEmployeeOptions();
         break;
       case "➣ View All Managers":
-        await handleViewAllManagers();
+        await handler.viewAllManagers();
+        displayEmployeeOptions();
         break;
       case "➣ View Employees by Manager":
-        await handleViewEmployeesByManager();
+        await handler.viewEmployeesByManager();
+        displayEmployeeOptions();
         break;
       case "➣ View Employees by Department":
-        await handleViewEmployeesByDepartment();
+        await handler.viewEmployeesByDepartment();
+        displayEmployeeOptions();
         break;
       case "➣ View Employees by Role":
-        await handleViewEmployeesByRole();
+        await handler.viewEmployeesByRole();
+        displayEmployeeOptions();
         break;
       case "➣ Sort Employees by Salary":
-        await handleSortEmployeesBySalary();
+        await handler.sortEmployeesBySalary();
+        displayEmployeeOptions();
         break;
       case "➣ Sort Employees by Last Name\n":
-        await handleSortEmployeesByLastName();
+        await handler.sortEmployeesByLastName();
+        displayEmployeeOptions();
         break;
       case chalk.red("*** Back to Main Menu ***\n"):
         await displayInitialChoices();
@@ -252,10 +256,18 @@ const startApp = () => {
     }
   };
 
- displayInitialChoices();
-}
 
- // Generate ASCII art when the application starts
-  generateAsciiArt();
+
+
+ 
+  displayInitialChoices();
+};
+
+// Generate ASCII art when the application starts
+generateAsciiArt();
 // Start the application by displaying initial choices
 startApp();
+
+// Warm Tones
+
+
