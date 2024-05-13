@@ -3,8 +3,8 @@ const inquirer = require("inquirer");
 const Handler = require("./lib/handlers/handler");
 const queries = require("./lib/queries/queries");
 const handler = new Handler(queries);
-const runChalkDemos = require("./chalk");
-const Table = require("cli-table3");
+
+
 
 // Function to generate ASCII art
 const generateAsciiArt = () => {
