@@ -5,7 +5,6 @@ const queries = require("./lib/queries/queries");
 const handler = new Handler(queries);
 
 
-
 // Function to generate ASCII art
 const generateAsciiArt = () => {
   const asciiArt = `
@@ -31,22 +30,18 @@ const generateAsciiArt = () => {
 
 // Function to start the application
 const startApp = () => {
-  console.log("\n"); // Add a newline for spacing at the beginning
+  console.log("\n"); 
   
-
- 
-
   // Initial choices containing main options
   const initialChoices = [
     "",
     chalk.hex("#1E90FF").italic.bold("📁 ➣ Department Options"),
     chalk.hex("#32CD32").italic.bold("👤 ➣ Role Options"),
     chalk.hex("#FFD700").italic.bold("🧑‍💼 ➣ Employee Options\n"),
-    // "➣ Run Chalk Demos",
+   
     chalk.red("*** Exit ***\n"),
   ];
 
-  // Function to display the initial choices and handle user selection
   const displayInitialChoices = () => {
     inquirer
       .prompt([
@@ -60,9 +55,7 @@ const startApp = () => {
         },
       ])
       .then((answers) => {
-        // Use the exact strings including chalk styles for matching in the switch statement
-        const chosenOption = answers.mainOption.replace(/\u001b\[.*?m/g, ""); // Removes ANSI color codes for matching
-
+        const chosenOption = answers.mainOption.replace(/\u001b\[.*?m/g, "");
         switch (chosenOption) {
           case "📁 ➣ Department Options":
             displayDepartmentOptions();
@@ -73,17 +66,13 @@ const startApp = () => {
           case "🧑‍💼 ➣ Employee Options\n":
             displayEmployeeOptions();
             break;
-          // case "➣ Run Chalk Demos":
-          //   runChalkDemos();
-          //   displayInitialChoices(); // Recall the function to prompt again
-          //   break;
           case "*** Exit ***\n":
             console.log("Exiting...");
-            process.exit(); // Exit the application
+            process.exit();
             break;
           default:
             console.log("Invalid option selected.");
-            displayInitialChoices(); // Recall the function to prompt again
+            displayInitialChoices(); 
             break;
         }
       });
@@ -263,11 +252,8 @@ const startApp = () => {
   displayInitialChoices();
 };
 
-// Generate ASCII art when the application starts
 generateAsciiArt();
-// Start the application by displaying initial choices
 startApp();
 
-// Warm Tones
 
 

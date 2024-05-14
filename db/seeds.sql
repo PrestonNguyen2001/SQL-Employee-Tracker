@@ -24,7 +24,7 @@ INSERT INTO role (title, salary, department_id) VALUES
 ('Marketing Manager', 70000, 3),
 ('Engineering Manager', 90000, 1),
 ('Finance Manager', 85000, 4),
-('Marketing Director', 100000, 3); -- Added the missing role
+('Marketing Director', 100000, 3); 
 
 -- Insert employees
 INSERT INTO employee (first_name, last_name, role_id, manager_id, is_manager) VALUES

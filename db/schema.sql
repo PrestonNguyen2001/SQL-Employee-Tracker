@@ -42,5 +42,3 @@ CREATE INDEX idx_role_department_id ON role(department_id);
 CREATE INDEX idx_employee_role_id ON employee(role_id);
 CREATE INDEX idx_employee_manager_id ON employee(manager_id);
 
--- Optional: Add additional constraints or triggers if business logic requires
--- Example trigger might enforce business rules such as salary limits per department
