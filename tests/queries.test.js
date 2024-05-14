@@ -61,7 +61,7 @@ describe("addRole", () => {
     const roleName = "Test Role";
     await addRole(roleName, 50000, 1);
     const roles = await viewAllRoles();
-    expect(Array.isArray(roles)).toBe(true); // Ensure the result is an array
+    expect(Array.isArray(roles)).toBe(true); 
     const testRole = roles.find((role) => role.title === roleName);
     expect(testRole).toBeTruthy();
   });
@@ -72,13 +72,13 @@ describe("addEmployee", () => {
   it("should add a new employee to the database", async () => {
     const firstName = "Test";
     const lastName = "Employee";
-    const roleId = 1; // Assume role ID 1 exists
-    const managerId = null; // Assume this employee has no manager
-    const isManager = false; // Clearly define if the employee is a manager
+    const roleId = 1;
+    const managerId = null; 
+    const isManager = false; 
 
     await addEmployee(firstName, lastName, roleId, managerId, isManager);
     const employees = await viewAllEmployees();
-    expect(Array.isArray(employees)).toBe(true); // Ensure the result is an array
+    expect(Array.isArray(employees)).toBe(true); 
     const testEmployee = employees.find(
       (emp) => emp.first_name === firstName && emp.last_name === lastName
     );
@@ -107,21 +107,16 @@ describe("deleteRole", () => {
   test("should delete a role from the database", async () => {
     const roleTitle = "Unique Test Role " + new Date().getTime(); // Ensures uniqueness
     try {
-      // First, add the role to ensure it exists
       await addRole(roleTitle, 50000, 1);
-      // Then, retrieve the role ID
       const result = await pool.query("SELECT id FROM role WHERE title = $1", [
         roleTitle,
       ]);
       const roleId = result.rows[0].id;
-      // Ensure no employees are assigned to this role before deletion
       await pool.query(
         "UPDATE employee SET role_id = NULL WHERE role_id = $1",
         [roleId]
       );
-      // Now delete the role
       await deleteRole(roleId);
-      // Verify that the role has been deleted
       const deletedRoleResult = await pool.query(
         "SELECT * FROM role WHERE id = $1",
         [roleId]
@@ -189,7 +184,7 @@ describe("viewAllEmployees", () => {
 // View total utilized budget by department test
 describe("viewTotalUtilizedBudgetByDepartment", () => {
   it("should return the total utilized budget of a department", async () => {
-    const departmentId = 1; // Replace with the actual department ID
+    const departmentId = 1; 
     const totalBudget = await viewTotalUtilizedBudgetByDepartment(departmentId);
     expect(typeof totalBudget).toBe("string");
     console.log(`Total budget: $${totalBudget}`);
@@ -252,7 +247,7 @@ describe("viewEmployeeDetailsByDepartment", () => {
 // View employees by manager test
 describe("viewEmployeesByManager", () => {
   it("should return an array of employees managed by a given manager", async () => {
-    const employees = await viewEmployeesByManager(1); // Assuming manager ID 1 exists
+    const employees = await viewEmployeesByManager(1); 
     expect(Array.isArray(employees)).toBe(true);
   });
 });
@@ -260,7 +255,7 @@ describe("viewEmployeesByManager", () => {
 // View employees by department test
 describe("viewEmployeesByDepartment", () => {
   it("should return an array of employees in a given department", async () => {
-    const employeesResult = await viewEmployeesByDepartment(1); // Assuming department ID 1 exists
+    const employeesResult = await viewEmployeesByDepartment(1); 
     expect(Array.isArray(employeesResult)).toBe(true);
   });
 });
@@ -268,7 +263,7 @@ describe("viewEmployeesByDepartment", () => {
 // View employees by role test
 describe("viewEmployeesByRole", () => {
   it("should return an array of employees with a given role", async () => {
-    const employees = await viewEmployeesByRole(1); // Assuming role ID 1 exists
+    const employees = await viewEmployeesByRole(1); 
     expect(Array.isArray(employees)).toBe(true);
   });
 });
@@ -279,118 +274,102 @@ describe("viewEmployeesByRole", () => {
 // Update role salary test
 describe("updateRoleSalary", () => {
   it("should update the salary of a role in the database", async () => {
-    const roleId = 1; // Replace with the actual role ID
-    const newSalary = 60000; // New salary value
+    const roleId = 1; 
+    const newSalary = 60000; 
     await updateRoleSalary(roleId, newSalary);
 
-    // Check if the salary was updated correctly
     const updatedRole = await pool.query("SELECT * FROM role WHERE id = $1", [
       roleId,
     ]);
-    expect(updatedRole.rows.length).toBe(1); // Ensure only one role is found
-    const updatedSalary = parseInt(updatedRole.rows[0].salary); // Convert salary to number
-    expect(updatedSalary).toBe(newSalary); // Check if salary was updated
+    expect(updatedRole.rows.length).toBe(1); 
+    const updatedSalary = parseInt(updatedRole.rows[0].salary); 
+    expect(updatedSalary).toBe(newSalary); 
   });
 });
 
 // Update employee role test
 describe("updateEmployeeRole", () => {
   it("should update an employee's role in the database", async () => {
-    // Assuming we have at least one employee and one role in the database
-    // view an employee and a role for testing
-    const [employee] = await viewAllEmployees(); // view the first employee
-    const newRoleId = 2; // Replace with the ID of the new role (assuming it exists)
+    
+    const [employee] = await viewAllEmployees(); 
+    const newRoleId = 2; 
 
-    // Store the initial role ID of the employee
     const initialRoleId = employee.role_id;
 
-    // Call the updateEmployeeRole function
     await updateEmployeeRole(employee.id, newRoleId);
 
-    // Retrieve the updated employee from the database
     const updatedEmployee = await pool.query(
       "SELECT * FROM employee WHERE id = $1",
       [employee.id]
     );
 
-    // Ensure that the employee's role has been updated
-    expect(updatedEmployee.rows.length).toBe(1); // Ensure only one employee is found
-    expect(updatedEmployee.rows[0].role_id).toBe(newRoleId); // Check if role was updated
-    expect(updatedEmployee.rows[0].role_id).not.toBe(initialRoleId); // Ensure role has changed
+    expect(updatedEmployee.rows.length).toBe(1);
+    expect(updatedEmployee.rows[0].role_id).toBe(newRoleId);
+    expect(updatedEmployee.rows[0].role_id).not.toBe(initialRoleId); 
   });
 });
 
 // Update employee manager test
 describe("updateEmployeeManager", () => {
   it("should update an employee's manager in the database", async () => {
-    // Assuming we have at least two employees in the database
-    // view employees for testing
-    const [employee1, employee2] = await viewAllEmployees(); // view the first two employees
-
-    // Store the initial manager ID of employee2
+   
+    const [employee1, employee2] = await viewAllEmployees();
     const initialManagerId = employee2.manager_id;
 
-    // Call the updateEmployeeManager function
-    await updateEmployeeManager(employee2.id, employee1.id); // Update employee2's manager to employee1
+    await updateEmployeeManager(employee2.id, employee1.id); 
 
-    // Retrieve the updated employee from the database
     const updatedEmployee2 = await pool.query(
       "SELECT * FROM employee WHERE id = $1",
       [employee2.id]
     );
 
-    // Ensure that the employee's manager has been updated
-    expect(updatedEmployee2.rows.length).toBe(1); // Ensure only one employee is found
-    expect(updatedEmployee2.rows[0].manager_id).toBe(employee1.id); // Check if manager was updated
-    expect(updatedEmployee2.rows[0].manager_id).not.toBe(initialManagerId); // Ensure manager has changed
+    expect(updatedEmployee2.rows.length).toBe(1);
+    expect(updatedEmployee2.rows[0].manager_id).toBe(employee1.id);
+    expect(updatedEmployee2.rows[0].manager_id).not.toBe(initialManagerId); 
   });
 });
 
 // Update role title test
 describe("updateRoleTitle", () => {
   it("should update the title of a role in the database", async () => {
-    const roleId = 1; // Replace with the actual role ID
-    const newTitle = "New Role Title"; // New title value
+    const roleId = 1; 
+    const newTitle = "New Role Title"; 
     await updateRoleTitle(roleId, newTitle);
 
-    // Check if the title was updated correctly
     const updatedRole = await pool.query("SELECT * FROM role WHERE id = $1", [
       roleId,
     ]);
-    expect(updatedRole.rows.length).toBe(1); // Ensure only one role is found
-    expect(updatedRole.rows[0].title).toBe(newTitle); // Check if title was updated
+    expect(updatedRole.rows.length).toBe(1);
+    expect(updatedRole.rows[0].title).toBe(newTitle);
   });
 });
 
 // Update role department test
 describe("updateRoleDepartment", () => {
   it("should update the department of a role in the database", async () => {
-    const roleId = 1; // Replace with the actual role ID
-    const newDepartmentId = 2; // Replace with the actual department ID
+    const roleId = 1; 
+    const newDepartmentId = 2; 
     await updateRoleDepartment(roleId, newDepartmentId);
 
-    // Check if the department was updated correctly
     const updatedRole = await pool.query("SELECT * FROM role WHERE id = $1", [
       roleId,
     ]);
-    expect(updatedRole.rows.length).toBe(1); // Ensure only one role is found
-    expect(updatedRole.rows[0].department_id).toBe(newDepartmentId); // Check if department was updated
+    expect(updatedRole.rows.length).toBe(1);
+    expect(updatedRole.rows[0].department_id).toBe(newDepartmentId); 
   });
 });
 
 // Update department name test
 describe("updateDepartmentName", () => {
   it("should not allow updating the department name to null", async () => {
-    const departmentId = 1; // Assuming this department ID exists
-    const newDepartmentName = null; // Intentionally set to null to test behavior
+    const departmentId = 1; 
+    const newDepartmentName = null; 
 
     try {
       await updateDepartmentName(departmentId, newDepartmentName);
     } catch (error) {
       expect(error.message).toBe("The new department name cannot be null.");
     }
-
-    // Optionally, verify that the database was not updated
     const result = await pool.query(
       "SELECT name FROM department WHERE id = $1",
       [departmentId]
@@ -426,7 +405,7 @@ describe("sortEmployeesByLastName", () => {
 // Delete employee test
 describe("deleteEmployee", () => {
   it("should delete an employee from the database", async () => {
-    await addEmployee("Test", "Employee", 1, null, false); // Assuming role ID 1 exists
+    await addEmployee("Test", "Employee", 1, null, false); 
     const employeesBeforeDeletion = await viewAllEmployees();
     expect(Array.isArray(employeesBeforeDeletion)).toBe(true);
     const testEmployee = employeesBeforeDeletion.find(
@@ -447,7 +426,7 @@ describe("deleteEmployee", () => {
 // Delete department test
 describe("deleteDepartment", () => {
   it("should delete a department from the database", async () => {
-    const departmentName = "Unique Test Department"; // Generate a unique name
+    const departmentName = "Unique Test Department"; 
     await addDepartment(departmentName);
     const departmentsBeforeDeletion = await viewAllDepartments();
     expect(Array.isArray(departmentsBeforeDeletion)).toBe(true);
@@ -470,7 +449,7 @@ describe("deleteDepartment", () => {
 describe("deleteRole", () => {
   it("should delete a role from the database", async () => {
     const roleName = "Unique Test Role";
-    await addRole(roleName, 50000, 1); // Assuming department ID 1 exists
+    await addRole(roleName, 50000, 1); 
     const rolesBeforeDeletion = await viewAllRoles();
     expect(Array.isArray(rolesBeforeDeletion)).toBe(true);
     const testRole = rolesBeforeDeletion.find(
@@ -478,7 +457,6 @@ describe("deleteRole", () => {
     );
     expect(testRole).toBeTruthy();
 
-    // Ensure no employees are assigned to this role before deletion
     await pool.query("UPDATE employee SET role_id = NULL WHERE role_id = $1", [
       testRole.id,
     ]);
